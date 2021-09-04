@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Ecommerce_Migration</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentMigrator" Version="3.2.9"/>
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.9"/>
+  </ItemGroup>
+</Project>

@@ -1,14 +1,14 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+using DatingApp.API.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace DatingApp.API.Controllers
 {
@@ -18,32 +18,31 @@ namespace DatingApp.API.Controllers
     {
         private IAuthRepository _repo;
         private IConfiguration _config;
+
         public AuthController(IAuthRepository repo, IConfiguration config)
         {
             _repo = repo;
-            _config = config;
+            _config =config;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        [HttpPost]
+        public async Task<IActionResult> Register(string userName, string passWord)
         {
-            userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
-            userForRegisterDto.PassWord = userForRegisterDto.PassWord.ToLower();
+            userName = userName.ToLower();
 
-            if(await _repo.UserExists(userForRegisterDto.UserName))
+            if(await _repo.UserExists(userName))
             {
                 return BadRequest("Username already exists");
             }
 
             var userToCreate = new User{
-                UserName = userForRegisterDto.UserName
+                UserName = userName
             };
 
-            var createUser = await _repo.Register(userToCreate, userForRegisterDto.PassWord);
+            var createUser = await _repo.Register(userToCreate, passWord);
 
             return StatusCode(201);
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
